@@ -9,7 +9,7 @@ async function respondfetch(request) {
     const targetUrl = decodeURIComponent(url.searchParams.get("url") || "");
     const originUrl = decodeURIComponent(url.searchParams.get("origin") || "");
     const proxyAll = decodeURIComponent(url.searchParams.get("all") || "");
-    
+
     if (!targetUrl) {
       return new Response("Invalid URL", { status: 400 });
     }
@@ -33,14 +33,14 @@ async function respondfetch(request) {
       const encodedUrl = encodeURIComponent(refererUrl);
       const encodedOrigin = encodeURIComponent(originUrl);
       modifiedM3u8 = modifiedM3u8.split("\n").map((line) => {
-        if (line.startsWith("#") || line.trim() == '') {
+        if (line.startsWith("#") || line.trim() == "") {
           return line;
-        }
-        else if(proxyAll == 'yes' && line.startsWith('http')){ //https://yourproxy.com/?url=https://somevideo.m3u8&all=yes
+        } else if (proxyAll == 'yes' && line.startsWith('http')) {
+          // https://yourproxy.com/?url=https://somevideo.m3u8&all=yes
           return `${url.origin}?url=${line}`;
         }
         return `?url=${targetUrlTrimmed}${line}${originUrl ? `&origin=${encodedOrigin}` : ""
-      }${refererUrl ? `&referer=${encodedUrl}` : ""
+        }${refererUrl ? `&referer=${encodedUrl}` : ""
           }`;
       }).join("\n");
     }
@@ -53,6 +53,7 @@ async function respondfetch(request) {
         "Content-Type":
           response.headers?.get("Content-Type") ||
           "application/vnd.apple.mpegurl",
+        "Content-Disposition": `attachment; filename="output.m3u8"`, // Set the desired filename
       },
     });
   } catch (e) {
