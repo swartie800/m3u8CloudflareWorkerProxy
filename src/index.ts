@@ -37,7 +37,7 @@ async function respondfetch(request) {
           return line;
         } else if (proxyAll == 'yes' && line.startsWith('http')) {
           // https://yourproxy.com/?url=https://somevideo.m3u8&all=yes
-          return `${url.origin}?url=${line}`;
+          return `${url.origin}?url=${line}&all=yes`;
         }
         return `?url=${targetUrlTrimmed}${line}${originUrl ? `&origin=${encodedOrigin}` : ""
         }${refererUrl ? `&referer=${encodedUrl}` : ""
